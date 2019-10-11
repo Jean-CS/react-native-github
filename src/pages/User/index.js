@@ -34,6 +34,7 @@ export default class User extends Component {
     loading: true,
     login: '',
     page: 1,
+    refreshing: false,
   };
 
   async componentDidMount() {
@@ -53,9 +54,17 @@ export default class User extends Component {
     this.setState({ stars: [...stars, ...res.data], page: page + 1 });
   };
 
+  refreshList = () => {
+    const { stars } = this.state;
+
+    this.setState({ refreshing: true });
+
+    this.setState({ stars: stars.splice(0, 30), page: 1, refreshing: false });
+  };
+
   render() {
     const { navigation } = this.props;
-    const { stars, loading } = this.state;
+    const { stars, loading, refreshing } = this.state;
     const user = navigation.getParam('user');
 
     return (
@@ -72,6 +81,8 @@ export default class User extends Component {
           <Stars
             data={stars}
             keyExtractor={star => String(star.id)}
+            onRefresh={this.refreshList}
+            refreshing={refreshing}
             onEndReachedThreshold={0.2}
             onEndReached={this.loadMore}
             renderItem={({ item }) => (
