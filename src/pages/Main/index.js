@@ -56,6 +56,8 @@ export default class Main extends Component {
     this.setState({ loading: true });
 
     try {
+      if (users.find(x => x.login === newUser)) throw new Error('Duplicate user');
+
       const res = await api.get(`/users/${newUser}`);
 
       const data = {
@@ -94,7 +96,7 @@ export default class Main extends Component {
             autoCapitalize="none"
             placeholder="Add user"
             value={newUser}
-            onChangeText={text => this.setState({ newUser: text })}
+            onChangeText={text => this.setState({ newUser: text, error: false })}
             returnKeyType="send"
             onSubmitEditing={this.handleAddUser}
             error={error}
