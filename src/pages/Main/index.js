@@ -35,6 +35,7 @@ export default class Main extends Component {
     newUser: '',
     users: [],
     loading: false,
+    error: false,
   };
 
   async componentDidMount() {
@@ -54,22 +55,26 @@ export default class Main extends Component {
 
     this.setState({ loading: true });
 
-    const res = await api.get(`/users/${newUser}`);
+    try {
+      const res = await api.get(`/users/${newUser}`);
 
-    const data = {
-      name: res.data.name,
-      login: res.data.login,
-      bio: res.data.bio,
-      avatar: res.data.avatar_url,
-    };
+      const data = {
+        name: res.data.name,
+        login: res.data.login,
+        bio: res.data.bio,
+        avatar: res.data.avatar_url,
+      };
 
-    this.setState({
-      users: [...users, data],
-      newUser: '',
-      loading: false,
-    });
+      this.setState({
+        users: [...users, data],
+        newUser: '',
+        loading: false,
+      });
 
-    KeyBoard.dismiss();
+      KeyBoard.dismiss();
+    } catch (err) {
+      this.setState({ error: true, loading: false });
+    }
   };
 
   handleNavigate = user => {
@@ -79,7 +84,7 @@ export default class Main extends Component {
   };
 
   render() {
-    const { users, newUser, loading } = this.state;
+    const { users, newUser, loading, error } = this.state;
 
     return (
       <Container>
@@ -92,6 +97,7 @@ export default class Main extends Component {
             onChangeText={text => this.setState({ newUser: text })}
             returnKeyType="send"
             onSubmitEditing={this.handleAddUser}
+            error={error}
           />
           <SubmitButton loading={loading} onPress={this.handleAddUser}>
             {loading ? <ActivityIndicator color="#fff" /> : <Icon name="add" size={20} color="#fff" />}
