@@ -6,19 +6,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import api from '../../services/api';
 
-import {
-  Container,
-  Form,
-  Input,
-  SubmitButton,
-  List,
-  User,
-  Avatar,
-  Name,
-  Bio,
-  ProfileButton,
-  ProfileButtonText,
-} from './styles';
+import { Form, Input, SubmitButton, List, User, Avatar, Name, Bio, ProfileButton, ProfileButtonText } from './styles';
+import { Container } from '../../components';
 
 export default class Main extends Component {
   static navigationOptions = {
